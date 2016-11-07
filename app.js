@@ -19,24 +19,29 @@ var db = mongoose.connection;
 
 var app = express();
 
+// uploads files 
+var upload = multer({ dest: './uploads' });
 // routes
-var routes = require('./routes/index');
+var index = require('./routes/index');
 var users = require('./routes/users');
 
 
 
-app.get('/', routes);
+app.get('/', index);
+app.get('*', index.all);
 app.get('/users', users.index);
+
 app.get('/users/register', users.register);
 app.get('/users/login', users.login);
+app.post('/users/login', users.loginpost);
+app.get('/logout', users.logout);
+app.post('/users/register', upload.single('avatar'), users.registerpost);
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uploads files 
-var upload = multer({ dest: './uploads' });
 app.use(favicon());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
